@@ -195,29 +195,26 @@ main = do
 							putStrLn "Downloading..."
 							threadDelay 2000000
 							doesDirectoryExist tags >>= ((flip unless) $ createDirectory tags)
-							c <- atomically $ newTMChan
+							c <- atomically $ newTChan
 							imagesPending <- atomically $ newTVar (length imgs)
-							forM_ imgs $ \img -> atomically $ writeTMChan c img
+							forM_ imgs $ \img -> atomically $ writeTChan c img
 							replicateM_ (fromInteger tc) $ forkIO $ consumer tags imageType c imagesPending
 							untilM_ ((atomically $ readTVar imagesPending) >>= return . (<= 0)) $ do
 								threadDelay 500000
 							putStrLn "Downloaded"
 		(_, _, errs) -> putStrLn $ concat errs ++ usageInfo header flagDef
 
-consumer :: String -> Int -> TMChan KonaImage -> TVar Int -> IO ()
+consumer :: String -> Int -> TChan KonaImage -> TVar Int -> IO ()
 consumer dir t c pending = do
-	mimg <- atomically $ readTMChan c
-	case mimg of
-		Nothing -> return ()
-		Just img -> do
-			let f = case t of
-				0 -> downloadPreviewImage
-				1 -> downloadSampleImage
-				2 -> downloadFullImage
-			(body, ext) <- f img
-			BL.writeFile (dir ++ "/" ++ show (kiId img) ++ "." ++ ext) body
-			atomically $ readTVar pending >>= writeTVar pending . (+ (-1))
-			consumer dir t c pending
+	img <- atomically $ readTChan c
+	let f = case t of
+		0 -> downloadPreviewImage
+		1 -> downloadSampleImage
+		2 -> downloadFullImage
+	(body, ext) <- f img
+	BL.writeFile (dir ++ "/" ++ show (kiId img) ++ "." ++ ext) body
+	atomically $ readTVar pending >>= writeTVar pending . (+ (-1))
+	consumer dir t c pending
 
 ----
 -- Util

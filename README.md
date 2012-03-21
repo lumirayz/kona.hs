@@ -1,6 +1,10 @@
 kona.hs
 =======
 
+Description
+-----------
+A command-line utility to download images from http://konachan.com.
+
 Dependencies
 ------------
 	attoparsec, aeson, http-conduit, stm, stm-chan, url

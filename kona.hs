@@ -9,23 +9,24 @@
 ----
 -- Imports
 ----
-import System.Console.GetOpt
-import Network.HTTP.Conduit
-import qualified Network.URL as U
-import Data.Attoparsec
-import Control.Applicative ((<$>), (<*>), empty)
-import qualified Data.ByteString.Lazy.Char8 as BL
-import Data.Aeson
-import Data.Maybe
-import Control.Monad
-import Control.Concurrent
-import Control.Concurrent.STM
-import Control.Concurrent.STM.TMChan
-import qualified Data.Vector as V
-import qualified Data.Text as T
-import Data.List
 import System.Environment
 import System.Directory
+import System.Console.GetOpt
+import Network.HTTP.Conduit
+import Data.Maybe
+import Data.List
+import Data.Attoparsec
+import Data.Aeson
+import Control.Monad
+import Control.Concurrent.STM.TMChan
+import Control.Concurrent.STM
+import Control.Concurrent
+import Control.Applicative ((<$>), (<*>), empty)
+
+import qualified Network.URL as U
+import qualified Data.Vector as V
+import qualified Data.Text as T
+import qualified Data.ByteString.Lazy.Char8 as BL
 
 ----
 -- Image handling

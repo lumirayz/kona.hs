@@ -125,7 +125,7 @@ flagDef =
 	, Option "t" ["threads"] (OptArg ThreadCount "THREADS")
 		"set ammount of threads"
 	, Option "i" ["image-type"] (OptArg ImageType "TYPE")
-		"set image type ([p]review, [s]ample, [full])"
+		"set image type ([p]review, [s]ample, [f]ull)"
 	, Option "h" ["help"] (NoArg Help)
 		"view this help page"
 	]

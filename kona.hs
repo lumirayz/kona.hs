@@ -111,7 +111,7 @@ downloadPreviewImage (KonaImage {kiPreviewUrl = link}) = downloadImage link
 ----
 data Flag
 	= Page (Maybe String)
-	| Ammount (Maybe String)
+	| Amount (Maybe String)
 	| ThreadCount (Maybe String)
 	| ImageType (Maybe String)
 	| Help
@@ -120,10 +120,10 @@ data Flag
 flagDef =
 	[ Option "p" ["page"] (OptArg Page "PAGE")
 		"set page number"
-	, Option "a" ["ammount"] (OptArg Ammount "AMMOUNT")
-		"set ammount of results"
+	, Option "a" ["amount"] (OptArg Amount "AMOUNT")
+		"set amount of results"
 	, Option "t" ["threads"] (OptArg ThreadCount "THREADS")
-		"set ammount of threads"
+		"set amount of threads"
 	, Option "i" ["image-type"] (OptArg ImageType "TYPE")
 		"set image type ([p]review, [s]ample, [f]ull)"
 	, Option "h" ["help"] (NoArg Help)
@@ -132,20 +132,20 @@ flagDef =
 
 header = "Usage: runhaskell kona.hs [OPTS] tags..."
 
-getPage, getAmmount, getThreadCount :: [Flag] -> Maybe Integer
+getPage, getAmount, getThreadCount :: [Flag] -> Maybe Integer
 getPage ((Page (Just p)):fs) = Just (read p)
 getPage ((Page Nothing):fs) = Nothing
 getPage (f:fs) = getPage fs
 getPage [] = Nothing
 
-getAmmount ((Ammount (Just a)):fs) = Just (read a)
-getAmmount ((Ammount Nothing):fs) = Nothing
-getAmmount (f:fs) = getAmmount fs
-getAmmount [] = Nothing
+getAmount ((Amount (Just a)):fs) = Just (read a)
+getAmount ((Amount Nothing):fs) = Nothing
+getAmount (f:fs) = getAmount fs
+getAmount [] = Nothing
 
 getThreadCount ((ThreadCount (Just t)):fs) = Just (read t)
 getThreadCount ((ThreadCount Nothing):fs) = Nothing
-getThreadCount (f:fs) = getAmmount fs
+getThreadCount (f:fs) = getAmount fs
 getThreadCount [] = Nothing
 
 getImageType :: [Flag] -> Maybe Int
@@ -175,7 +175,7 @@ main = do
 	case getOpt RequireOrder flagDef args of
 		(o, n, []) -> do
 			let page = max (maybe 0 id $ getPage o) 0
-			let amt = max (min (maybe 10 id $ getAmmount o) 100) 1
+			let amt = max (min (maybe 10 id $ getAmount o) 100) 1
 			let tc = max (maybe 5 id $ getThreadCount o) 1
 			let imageType = maybe 0 id $ getImageType o
 			let help = getHelp o
